@@ -15,16 +15,16 @@ DISK_THRESHOLD=85
 print_status() {
 	local status="$1"
 	local message="$2"
-	if [ "$status" = "OK"]; then
+	if [ "$status" = "OK" ]; then
 		echo -e "\e[32m OK: $message\e[0m"
 	else
-		echo -e "\e[m31 ALERT: $message\e[0m"
+		echo -e "\e[31m ALERT: $message\e[0m"
 	fi
 }
 
 # --- Variables and quoting demonstration ---
 HOSTNAME=$(hostname)
-CURRENT_DATE+$(date '+%Y-%m-%d %H:%M:%S')
+CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
 # IMPORTANT: Quoting demo (Python/Java students read this!)
 # Without quotes -> word-splitting but (try it!)
@@ -47,24 +47,24 @@ PROCESS_COUNT=$(ps -e | wc -l)
 
 # --- Parse numeric percentages for threshold comparison (Rocky Linux 9 compartible) ---
 # Disk usage percentage for root filesystem (strip the % sign)
-Disk_PCT=$(df / | tail -1 | awk '{gsub("%",""); print $5}'
+DISK_PCT=$(df / | tail -1 | awk '{gsub("%",""); print $5}')
 
 #Memory usage percentage (used / total * 100), rounded to integer
-MEM_PCT=$(free | awk '/Mem:/ {printtf "%.0f"); $3/$2*100}')
+MEM_PCT=$(free | awk '/Mem:/ {printf "%.0f", $3/$2*100}')
 
 # CPU usage percentage (100 - idle). The top -bn1 method is a common one-liner
 # that works on Rocky Linux 9. Note: This is a brief snapshot; production tools
 # often average over time or use /proc/stat directly
-CPT_PCT=$(top -bn1 | grep '^%Cpu' | awk '{print 100 - $8}' | cut -d. -f1)
+CPU_PCT=$(top -bn1 | grep '^%Cpu' | awk '{print 100 - $8}' | cut -d. -f1)
 
 # --- Health check with conditionals and color-coded output ---
-print_status "CHECK" "Runnint system health analysis..."
+print_status "CHECK" "Running system health analysis..."
 
 HEALTH_STATUS=0 # 0 = halthy (no alerts). Will be set to 1 if any check fails)
 
 # Disk check for root filesystem
 if (( DISK_PCT > DISK_THRESHOLD )); then
-	print_status "ALERT" "Disk usage on / is ${DISK_PCT}% (threshold ${DISK_THRESHOLD}%}"
+	print_status "ALERT" "Disk usage on / is ${DISK_PCT}% (threshold ${DISK_THRESHOLD}%)"
 	HEALTH_STATUS=1
 else
 	print_status "OK" "Disk usage on / is ${DISK_PCT}%"
@@ -72,7 +72,7 @@ fi
 
 # Memory check
 if ((MEM_PCT > MEM_THRESHOLD )); then
-	print_status "ALERT" "Memory usage is ${MEM_PCT}% (threshold ${DISK_THRESHOLD}%)"
+	print_status "ALERT" "Memory usage is ${MEM_PCT}% (threshold ${MEM_THRESHOLD}%)"
 else
 	print_status "OK" "Memory usage is ${MEM_PCT}%"
 fi
