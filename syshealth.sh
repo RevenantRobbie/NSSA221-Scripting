@@ -84,6 +84,21 @@ else
 	print_status "OK" "CPU usage is ${CPU_PCT}%"
 fi
 
+for mount in / /home /var; do
+	if mountpoint -q "$mount" 2>/dev/null || [ "$mount" = "/" ]; then
+		PCT=$(df "$mount" | tail -1 | awk '{gsub("%",""); print $5}')
+		if (( pCT > DISK_THRESHOLD )); then
+			print_status "ALERT" "Disk usage on $mount is ${PCT}% (Threshold ${DISK_THRESHOLD}%)"
+			HEALTH_STATUS=1
+		else
+			print_status "OK" "Disk usage on $mount is ${PCT}%"
+		fi
+	else
+		print_status "OK" "Mount point $mount does not exist or is not a mountpoint on this system"
+	fi
+done
+
+
 # --- Output handling ---
 OUTPUT_FILE="${1:-}" # if $1 is given, use it; otherwise print to screen
 
@@ -95,15 +110,16 @@ print_report() {
 	printf "Disk /  	: %s\n" "$DISK_USAGE"
 	printf "Memory used     : %s\n" "$MEMORY_USAGE"
 	printf "Total Processes : %s\n" "$PROCESS_COUNT"
+	printf "Health status   : %s\n" "$([ "$HEALTH_STATUS" -eq 0 ] && echo "HEALTHY" || echo "UNHEALTHY - see alerts above")"
 	printf "==================================================\n"
-
 }
 
 if [ -n "$OUTPUT_FILE" ]; then
 	print_report > "$OUTPUT_FILE"
-	echo "Report written to $OUTPUT_FILE"
+	echo "Report written to $OUTPUT_FILE (alerts were printed to terminal)"
 else
 	print_report
 fi
 
-exit 0
+# Exit with 0 (healthy) or 1 (alerts triggered). This enables scripting / cron usage.
+exit "${HEALTH_STATUS:-0}"
