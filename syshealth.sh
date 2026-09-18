@@ -6,6 +6,12 @@
 # Date : 9/4/2026
 #bash: line 1: Y: command not found
 # ==================================================
+
+# --- Thresholds (change these values to test alert behavior) ---
+CPU_THRESHOLD=75
+MEM_THRESHOLD=85
+DISK_THRESHOLD=85
+
 # --- Variables and quoting demonstration ---
 HOSTNAME=$(hostname)
 CURRENT_DATE+$(date '+%Y-%m-%d %H:%M:%S')
