@@ -1,0 +1,5 @@
+* 8c2ce5b (HEAD -> master) Added positional argument handling and report output
+* bb2d3b5 Implemented command substitution for system metrics
+* 718bccf Demonstrate quoting rules with explanatory comment
+* 7cbcbcf Added shebang and made syshealth.sh executable
+* 61f6fb5 (NSSA221-Scripting1/master) Initial commit: project skeleton and README
