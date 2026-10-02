@@ -69,6 +69,52 @@ check_cpu_usage() {
 	fi
 }
 
+run_health_checks() {
+	local overall_status=0
+	
+	print_status "CHECK" "Running systems health analysis..."
+	
+	# Disk checks via loop (replaces the inline for-loop from Lab 2
+	for mount in / /home /var; do
+		if ! check_disk_usage "$mount"; then
+			overall_status=1
+		fi
+	done
+	
+	# Memory check
+	if ! check_memory_usage; then
+		overall_status=1
+	fi
+	
+	# Store result for generate_report / exit
+	HEALTH_STATUS="$overall_status"
+}
+
+parse_arguments() {
+	OUTPUT_FILE="${1:-}"	# if $1 is given, use it as output file; otherwise empmy
+}
+
+generate_report() {
+	local CURRENT_DATE HOSTNAME UPTIME DISK_USAGE MEMORY_USAGE PROCESS_COUNT
+	
+	CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+	HOSTNAME=$(hostname)
+	UPTIME=$(uptime -p)
+	DISK_USAGE=$(df -h / | tail -1)
+	MEMORY_USAGE=$(free -h | awk '/Mem:/ {print $3 "/" $2}')
+	PROCESS_COUNT=$(ps -e | wc -l)
+	
+	printf "==================================================\n"
+	printf "System Health Report - %s\n" "$CURRENT_DATE"
+	printf "Hostname	: %s\n" "$HOSTNAME"
+	printf "Uptime  	: %s\n" "$UPTIME"
+	printf "Disk /  	: %s\n" "$DISK_USAGE"
+	printf "Memory used     : %s\n" "$MEMORY_USAGE"
+	printf "Total Processes : %s\n" "$PROCESS_COUNT"
+	printf "Health status   : %s\n" "$([ "$HEALTH_STATUS" -eq 0 ] && echo "HEALTHY" || echo "UNHEALTHY - see alerts above")"
+	printf "==================================================\n"
+}
+
 main() {
 	parse_arguments "$@"
 	run_health_checks
