@@ -91,7 +91,7 @@ run_health_checks() {
 }
 
 parse_arguments() {
-	OUTPUT_FILE="${1:-}"	# if $1 is given, use it as output file; otherwise empmy
+	OUTPUT_FILE="${1:-}"	# if $1 is given, use it as output file; otherwise empty
 }
 
 generate_report() {
@@ -118,9 +118,11 @@ generate_report() {
 main() {
 	parse_arguments "$@"
 	
-	# Run all the health checks (prints colored alerts to terminal)
+ 	# Run all the health checks (prints colored alerts to terminal)
 	run_health_checks
 	
+	echo "---"
+	echo "$OUTPUT_FILE"
 	# Generate the structured report (to screen or file)
 	if [ -n "$OUTPUT_FILE" ]; then
 		generate_report > "$OUTPUT_FILE"
@@ -134,6 +136,6 @@ main() {
 }
 
 # The single call that starts everything -must be the very last line
-main
+main "$@"
 
 
