@@ -1,9 +1,20 @@
-==================================================
-System Health Report - 2026-10-08 03:33:42
-Hostname	: 4e36c23524d1
-Uptime  	: up 58 minutes
-Disk /  	: overlay        1007G   26G  930G   3% /
-Memory used     : 704Mi/7.6Gi
-Total Processes : 7
-Health status   : HEALTHY
-==================================================
+* 0788399 (HEAD -> master, origin/master, origin/HEAD) forgot to add the 3rd log due to some weirt git sheganigans
+* 36d170f buxfixes. Also, this last commit is being done in a docker container which is why the logs look weird
+* 67e7cbd refactored main
+* f839ddf Implemented run_health_checks and parse-arguments
+* ac31e1c restored print_status from bak and added check functions (check_disk_usage, check_memory_usage, and check_cpu_usage).
+* 5fbad13 backed up syshealth and added main() function with basic script structure
+* c8a6bc0 minor organization changes
+* eae4139 new log!
+* c5f84d6 completed testing and various syntax bugfixes
+* aa53526 Added for-loop over multiple mount points and update exit code handling
+* 5381f76 Added parsing and conditional checks for disk, memory, and CPU
+* 572b18c Implemented print_status function with color-coded output
+* 06ae0c0 Added threshold variables for CPU, MEM, and DISK
+* a0938ac getting started on scripting 2. I also created a backup  of syshealth just in case
+* d215908 created submission log
+* 8c2ce5b Added positional argument handling and report output
+* bb2d3b5 Implemented command substitution for system metrics
+* 718bccf Demonstrate quoting rules with explanatory comment
+* 7cbcbcf Added shebang and made syshealth.sh executable
+* 61f6fb5 Initial commit: project skeleton and README

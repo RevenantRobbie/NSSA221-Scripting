@@ -1,9 +1,9 @@
 ==================================================
-System Health Report - 2026-09-18 11:07:20
-Hostname	: localhost.localdomain
-Uptime  	: up 1 hour, 4 minutes
-Disk /  	: /dev/mapper/rl-root   35G  4.9G   30G  15% /
-Memory used     : 1.2Gi/3.6Gi
-Total Processes : 286
+System Health Report - 2026-10-08 03:41:00
+Hostname	: 4e36c23524d1
+Uptime  	: up 1 hour, 5 minutes
+Disk /  	: overlay        1007G   26G  930G   3% /
+Memory used     : 696Mi/7.6Gi
+Total Processes : 7
 Health status   : HEALTHY
 ==================================================
